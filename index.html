@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KlikSnek - Tempahan Pantas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans antialiased">
+
+    <header class="bg-orange-500 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-2xl font-bold"><i class="fa-solid fa-cookie-bite mr-2"></i>KlikSnek</h1>
+            <button id="btnBakul" onclick="bukaBakul()" class="relative hidden bg-orange-600 hover:bg-orange-700 p-2 rounded-full transition">
+                <i class="fa-solid fa-cart-shopping text-xl"></i>
+                <span id="badgeBakul" class="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-6">
+        
+        <div id="loadingSkrin" class="text-center py-20">
+            <i class="fa-solid fa-spinner fa-spin text-5xl text-orange-500 mb-4"></i>
+            <p class="text-lg font-semibold text-gray-600">Memuatkan data kedai...</p>
+        </div>
+
+        <div id="profilSkrin" class="hidden bg-white p-6 rounded-xl shadow-lg max-w-md mx-auto">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Maklumat Pembeli</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nama Penuh</label>
+                    <input type="text" id="inputNama" class="mt-1 block w-full rounded-md border-gray-300 border p-2 focus:ring-orange-500 focus:border-orange-500" placeholder="Ali bin Abu">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">No. Telefon (WhatsApp)</label>
+                    <input type="tel" id="inputTel" class="mt-1 block w-full rounded-md border-gray-300 border p-2 focus:ring-orange-500 focus:border-orange-500" placeholder="0123456789">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Kumpulan WhatsApp</label>
+                    <select id="inputGroup" class="mt-1 block w-full rounded-md border-gray-300 border p-2 focus:ring-orange-500 focus:border-orange-500">
+                        <option value="">-- Sila Pilih --</option>
+                        </select>
+                </div>
+                <button onclick="mulaMembeli()" class="w-full bg-orange-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-600 transition shadow-md">
+                    Mula Membeli <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="kedaiSkrin" class="hidden">
+            <div class="mb-6 flex space-x-2 overflow-x-auto py-2" id="kategoriContainer">
+                </div>
+
+            <div id="produkGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                </div>
+        </div>
+
+    </main>
+
+    <div id="bakulModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-end md:items-center justify-center">
+        <div class="bg-white w-full md:w-2/3 lg:w-1/2 md:rounded-xl rounded-t-xl h-[80vh] md:h-auto flex flex-col shadow-2xl transition-transform transform translate-y-full" id="bakulContent">
+            <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
+                <h3 class="text-xl font-bold"><i class="fa-solid fa-basket-shopping mr-2 text-orange-500"></i>Bakul Anda</h3>
+                <button onclick="tutupBakul()" class="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
+            </div>
+            
+            <div class="p-4 flex-1 overflow-y-auto" id="senaraiBakul">
+                </div>
+            
+            <div class="p-4 border-t bg-gray-50">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-bold text-lg text-gray-700">Jumlah Keseluruhan:</span>
+                    <span class="font-bold text-2xl text-orange-600">RM <span id="jumlahKeseluruhan">0</span></span>
+                </div>
+                <button onclick="hantarTempahan()" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition shadow-md text-lg">
+                    <i class="fa-solid fa-paper-plane mr-2"></i> Sahkan & Tempah
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================================
+        // GANTIKAN URL DI BAWAH DENGAN WEB APP URL GOOGLE APPS SCRIPT ANDA
+        // ====================================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbxJ3c5eCP4aSt90yI8-vnKg3KONA3dlQh943kFlBqfSKWGFACoQGeEj5dW1VBKYG6kL/exec"; 
+
+        // Pembolehubah Global
+        let senaraiProduk = [];
+        let senaraiTetapan = [];
+        let bakul = [];
+        let profilUser = {};
+
+        // 1. Muatkan data apabila web dibuka
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch(API_URL)
+                .then(res => res.json())
+                .then(data => {
+                    senaraiProduk = data.produk;
+                    senaraiTetapan = data.tetapan;
+                    
+                    // Masukkan senarai Group WA ke dalam dropdown
+                    const selectGroup = document.getElementById("inputGroup");
+                    senaraiTetapan.forEach(tetapan => {
+                        if(tetapan.JenisGroupWA) {
+                            let option = document.createElement("option");
+                            option.value = tetapan.JenisGroupWA;
+                            option.text = tetapan.JenisGroupWA;
+                            selectGroup.add(option);
+                        }
+                    });
+                    
+                    let optionLain = document.createElement("option");
+                    optionLain.value = "Lain-lain"; optionLain.text = "Lain-lain";
+                    selectGroup.add(optionLain);
+
+                    // Sembunyikan loading, tunjuk profil
+                    document.getElementById("loadingSkrin").classList.add("hidden");
+                    document.getElementById("profilSkrin").classList.remove("hidden");
+                })
+                .catch(err => {
+                    Swal.fire("Ralat!", "Gagal menyambung ke pangkalan data. Sila *refresh* web ini.", "error");
+                });
+        });
+
+        // 2. Fungsi Mula Membeli (Validasi Profil)
+        function mulaMembeli() {
+            const nama = document.getElementById("inputNama").value.trim();
+            const tel = document.getElementById("inputTel").value.trim();
+            const group = document.getElementById("inputGroup").value;
+
+            if(!nama || !tel || !group) {
+                Swal.fire("Maaf", "Sila isi Nama, No Telefon dan pilih Kumpulan WhatsApp sebelum meneruskan.", "warning");
+                return;
+            }
+
+            profilUser = { nama, telefon: tel, kumpulanWA: group };
+            
+            document.getElementById("profilSkrin").classList.add("hidden");
+            document.getElementById("kedaiSkrin").classList.remove("hidden");
+            document.getElementById("btnBakul").classList.remove("hidden");
+            
+            paparKategori();
+        }
+
+        // 3. Papar Butang Kategori
+        function paparKategori() {
+            // Dapatkan kategori yang unik
+            const kategoriUnik = [...new Set(senaraiProduk.map(item => item.Kategori))];
+            const container = document.getElementById("kategoriContainer");
+            container.innerHTML = ""; // Kosongkan
+
+            kategoriUnik.forEach((kat, index) => {
+                let btn = document.createElement("button");
+                btn.className = "whitespace-nowrap px-4 py-2 rounded-full border border-orange-500 text-orange-600 font-medium hover:bg-orange-500 hover:text-white transition focus:outline-none";
+                btn.innerText = kat;
+                btn.onclick = () => paparProduk(kat);
+                container.appendChild(btn);
+            });
+
+            // Papar kategori pertama secara automatik
+            if(kategoriUnik.length > 0) paparProduk(kategoriUnik[0]);
+        }
+
+        // 4. Papar Gambar dan Detail Produk berdasarkan Kategori
+        function paparProduk(kategoriDipilih) {
+            const grid = document.getElementById("produkGrid");
+            grid.innerHTML = ""; 
+
+            const produkPilihan = senaraiProduk.filter(item => item.Kategori === kategoriDipilih);
+
+            produkPilihan.forEach((item, index) => {
+                // Reka bentuk kad produk
+                const card = document.createElement("div");
+                card.className = "bg-white rounded-xl shadow-md overflow-hidden cursor-pointer transform hover:scale-105 transition duration-300";
+                // Apabila gambar diklik, ia panggil fungsi tanyaKuantiti
+                card.onclick = () => tanyaKuantiti(item);
+                
+                card.innerHTML = `
+                    <div class="h-40 bg-gray-200 overflow-hidden relative">
+                        <img src="${item.Gambar}" alt="${item.NamaBarang}" class="w-full h-full object-cover">
+                        <div class="absolute bottom-0 right-0 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg">Klik untuk beli</div>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-bold text-gray-800 text-sm mb-1 line-clamp-2">${item.NamaBarang}</h3>
+                        <p class="text-xs text-gray-500 mb-2">${item.Saiz}</p>
+                        <p class="font-bold text-orange-600">RM ${item.Harga}</p>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 5. Fungsi Klik Gambar & Masukkan Kuantiti (Guna SweetAlert)
+        function tanyaKuantiti(item) {
+            Swal.fire({
+                title: item.NamaBarang,
+                text: `${item.Saiz} - RM ${item.Harga}`,
+                imageUrl: item.Gambar,
+                imageWidth: 200,
+                imageHeight: 200,
+                imageAlt: 'Gambar Produk',
+                input: 'number',
+                inputLabel: 'Berapa banyak anda mahu beli?',
+                inputValue: 1,
+                inputAttributes: { min: 1, step: 1 },
+                showCancelButton: true,
+                confirmButtonText: 'Masuk Bakul',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#f97316'
+            }).then((result) => {
+                if (result.isConfirmed && result.value > 0) {
+                    tambahKeBakul(item, parseInt(result.value));
+                }
+            });
+        }
+
+        // 6. Logik Tambah ke Bakul
+        function tambahKeBakul(item, kuantiti) {
+            const jumlahHarga = parseFloat(item.Harga) * kuantiti;
+            
+            // Periksa jika barang sudah ada dalam bakul, kita tambah kuantitinya sahaja
+            const indeksSediaAda = bakul.findIndex(b => b.nama === item.NamaBarang && b.saiz === item.Saiz);
+            
+            if (indeksSediaAda > -1) {
+                bakul[indeksSediaAda].kuantiti += kuantiti;
+                bakul[indeksSediaAda].jumlah += jumlahHarga;
+            } else {
+                bakul.push({
+                    nama: item.NamaBarang,
+                    saiz: item.Saiz,
+                    hargaSatu: item.Harga,
+                    kuantiti: kuantiti,
+                    jumlah: jumlahHarga
+                });
+            }
+
+            kemaskiniLencanaBakul();
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Dimasukkan!',
+                text: `${kuantiti}x ${item.NamaBarang} telah dimasukkan ke dalam bakul.`,
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        function kemaskiniLencanaBakul() {
+            const jumlahItem = bakul.reduce((total, item) => total + item.kuantiti, 0);
+            document.getElementById("badgeBakul").innerText = jumlahItem;
+        }
+
+        // 7. Pengurusan Modal Bakul
+        function bukaBakul() {
+            if (bakul.length === 0) {
+                Swal.fire("Bakul Kosong", "Sila pilih barangan terlebih dahulu.", "info");
+                return;
+            }
+            const modal = document.getElementById("bakulModal");
+            const content = document.getElementById("bakulContent");
+            modal.classList.remove("hidden");
+            setTimeout(() => content.classList.remove("translate-y-full"), 10);
+            binaSenaraiBakul();
+        }
+
+        function tutupBakul() {
+            const content = document.getElementById("bakulContent");
+            content.classList.add("translate-y-full");
+            setTimeout(() => document.getElementById("bakulModal").classList.add("hidden"), 300);
+        }
+
+        function binaSenaraiBakul() {
+            const container = document.getElementById("senaraiBakul");
+            container.innerHTML = "";
+            let jumlahKeseluruhan = 0;
+
+            bakul.forEach((item, index) => {
+                jumlahKeseluruhan += item.jumlah;
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-white p-3 rounded-lg shadow-sm border mb-2">
+                        <div>
+                            <h4 class="font-bold text-sm text-gray-800">${item.nama}</h4>
+                            <p class="text-xs text-gray-500">${item.saiz} | RM ${item.hargaSatu} x ${item.kuantiti}</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="font-bold text-orange-600">RM ${item.jumlah.toFixed(2)}</span>
+                            <button onclick="buangItem(${index})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById("jumlahKeseluruhan").innerText = jumlahKeseluruhan.toFixed(2);
+        }
+
+        function buangItem(index) {
+            bakul.splice(index, 1);
+            kemaskiniLencanaBakul();
+            if(bakul.length === 0) {
+                tutupBakul();
+            } else {
+                binaSenaraiBakul();
+            }
+        }
+
+        // 8. Hantar Data ke GAS & Redirect ke WhatsApp
+        function hantarTempahan() {
+            // Kira total
+            const jumlahKeseluruhan = bakul.reduce((total, item) => total + item.jumlah, 0);
+            
+            // Sediakan pakej data untuk dihantar ke Google Apps Script
+            const dataTempahan = {
+                nama: profilUser.nama,
+                telefon: profilUser.telefon,
+                kumpulanWA: profilUser.kumpulanWA,
+                bakul: bakul,
+                jumlahKeseluruhan: jumlahKeseluruhan
+            };
+
+            // Loading state
+            Swal.fire({
+                title: 'Memproses Tempahan...',
+                text: 'Sila tunggu sebentar',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            // Hantar ke Google Sheet
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(dataTempahan),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' } // elak isu CORS
+            })
+            .then(res => res.json())
+            .then(respon => {
+                if(respon.status === "berjaya") {
+                    // Bina teks WhatsApp
+                    let teksWA = `*TEMPAHAN BARU KLICKSNEK* 🍪\nID: ${respon.id}\n\n*Nama:* ${profilUser.nama}\n*No Tel:* ${profilUser.telefon}\n*Kumpulan:* ${profilUser.kumpulanWA}\n\n*Pesanan:*\n`;
+                    bakul.forEach(item => {
+                        teksWA += `- ${item.nama} (${item.saiz}) x${item.kuantiti} = RM${item.jumlah}\n`;
+                    });
+                    teksWA += `\n*Jumlah Keseluruhan: RM ${jumlahKeseluruhan}*\n\nSila sahkan tempahan saya. Terima kasih!`;
+                    
+                    const pautanWA = `https://wa.me/6019XXXXXXX?text=${encodeURIComponent(teksWA)}`; // GANTIKAN NOMBOR ANDA
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berjaya!',
+                        text: 'Tempahan anda telah direkodkan.',
+                        confirmButtonText: 'Hantar ke WhatsApp',
+                        confirmButtonColor: '#22c55e'
+                    }).then(() => {
+                        // Reset sistem dan buka WhatsApp
+                        bakul = [];
+                        kemaskiniLencanaBakul();
+                        tutupBakul();
+                        document.getElementById("kedaiSkrin").classList.add("hidden");
+                        document.getElementById("profilSkrin").classList.remove("hidden");
+                        
+                        window.open(pautanWA, '_blank');
+                    });
+                } else {
+                    throw new Error("Ralat server");
+                }
+            })
+            .catch(err => {
+                Swal.fire("Gagal", "Ralat sistem. Sila cuba lagi.", "error");
+            });
+        }
+    </script>
+</body>
+</html>
