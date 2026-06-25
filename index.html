@@ -7,10 +7,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Tetapan CSS Khas Untuk Fungsi Cetak (Print) Admin */
+        @media print {
+            body * { visibility: hidden; }
+            #adminSkrin, #adminSkrin * { visibility: visible; }
+            #adminSkrin { position: absolute; left: 0; top: 0; width: 100%; padding: 0; box-shadow: none; }
+            .no-print { display: none !important; }
+            header { display: none !important; }
+            body { background-color: white; }
+        }
+    </style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans antialiased">
 
-    <!-- HEADER -->
+    <!-- HEADER (Akan hilang masa print) -->
     <header class="bg-orange-500 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <h1 class="text-2xl font-bold"><i class="fa-solid fa-cookie-bite mr-2"></i>KlikSnek</h1>
@@ -26,16 +38,50 @@
         <!-- SKRIN LOADING -->
         <div id="loadingSkrin" class="text-center py-20">
             <i class="fa-solid fa-spinner fa-spin text-5xl text-orange-500 mb-4"></i>
-            <p class="text-lg font-semibold text-gray-600">Memuatkan barangan...</p>
+            <p class="text-lg font-semibold text-gray-600">Memuatkan sistem...</p>
         </div>
 
-        <!-- MOD ADMIN -->
-        <div id="adminSkrin" class="hidden bg-white p-6 rounded-xl shadow-lg">
-            <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2"><i class="fa-solid fa-lock text-red-500 mr-2"></i>Panel Pentadbir</h2>
-            <p>Paparan data pelanggan dan jumlah jualan akan dibina di sini pada Fasa seterusnya.</p>
+        <!-- ================= BAHAGIAN ADMIN ================= -->
+        <div id="adminSkrin" class="hidden bg-white p-6 rounded-xl shadow-lg w-full">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b pb-4">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">
+                    <i class="fa-solid fa-lock text-red-500 mr-2"></i>Laporan Tempahan
+                </h2>
+                <div class="space-x-2 no-print">
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
+                        <i class="fa-solid fa-print mr-2"></i>Cetak
+                    </button>
+                    <a href="?" class="inline-block bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded shadow">
+                        <i class="fa-solid fa-door-open mr-2"></i>Tutup Panel
+                    </a>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-700 text-sm">
+                            <th class="border p-2">Tarikh & Masa</th>
+                            <th class="border p-2">Pelanggan</th>
+                            <th class="border p-2">Kumpulan</th>
+                            <th class="border p-2 w-1/3">Pesanan</th>
+                            <th class="border p-2 text-right">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jadualTempahan">
+                        <!-- Data tempahan akan diisi oleh skrip -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="bg-orange-100 font-bold">
+                            <td colspan="4" class="border p-3 text-right">JUMLAH KESELURUHAN JUALAN:</td>
+                            <td class="border p-3 text-right text-orange-600 text-lg">RM <span id="totalJualanAdmin">0.00</span></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
 
-        <!-- BAHAGIAN KEDAI (Akan terus terpapar) -->
+        <!-- ================= BAHAGIAN KEDAI PELANGGAN ================= -->
         <div id="kedaiSkrin" class="hidden">
             <div class="mb-6 flex space-x-2 overflow-x-auto py-2" id="kategoriContainer"></div>
             <div id="produkGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
@@ -43,11 +89,11 @@
 
     </main>
 
-    <!-- MODAL PROFIL (Hanya keluar bila klik tempah kali pertama) -->
-    <div id="profilModal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center px-4">
+    <!-- MODAL PROFIL (Daftar kali pertama) -->
+    <div id="profilModal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center px-4 no-print">
         <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
             <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Maklumat Pembeli</h2>
-            <p class="text-sm text-gray-600 mb-4">Sila isi maklumat di bawah sebelum meneruskan tempahan.</p>
+            <p class="text-sm text-gray-600 mb-4">Sila isi maklumat di bawah sebelum memasukkan barang ke bakul.</p>
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Nama Penuh</label>
@@ -63,14 +109,14 @@
                 </div>
                 <div class="flex space-x-2">
                     <button onclick="tutupProfilModal()" class="w-1/3 bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Batal</button>
-                    <button onclick="simpanProfil()" class="w-2/3 bg-orange-500 text-white font-bold py-2 px-4 rounded-lg">Sahkan & Teruskan</button>
+                    <button onclick="simpanProfil()" class="w-2/3 bg-orange-500 text-white font-bold py-2 px-4 rounded-lg">Sahkan</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- MODAL BAKUL -->
-    <div id="bakulModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-end md:items-center justify-center">
+    <div id="bakulModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-end md:items-center justify-center no-print">
         <div class="bg-white w-full md:w-2/3 lg:w-1/2 md:rounded-xl rounded-t-xl h-[80vh] md:h-auto flex flex-col shadow-2xl" id="bakulContent">
             <div class="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
                 <h3 class="text-xl font-bold"><i class="fa-solid fa-basket-shopping mr-2 text-orange-500"></i>Bakul Anda</h3>
@@ -90,51 +136,105 @@
     </div>
 
     <script>
-        const API_URL = "LETAK_URL_GAS_AWAK_DI_SINI"; // <-- PASTIKAN LETAK URL GAS ANDA SEMULA DI SINI
-        const NO_WHATSAPP_ADMIN = "60139100570"; // <-- TUKAR NOMBOR INI JIKA PERLU
+        // ========================================================================
+        // 1. MASUKKAN MAKLUMAT ANDA DI SINI
+        // ========================================================================
+        const API_URL = "LETAK_URL_GAS_AWAK_DI_SINI"; // Ganti dengan Web App URL dari GAS
+        const NO_WHATSAPP_ADMIN = "60139100570"; // Nombor anda untuk terima tempahan
 
         let senaraiProduk = [], senaraiTetapan = [], bakul = [];
         let profilUser = { nama: "", telefon: "", kumpulanWA: "" };
-        let itemTertangguh = null; // Menyimpan item jika user belum isi profil
+        let itemTertangguh = null;
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Pengesan Mod Admin melalui URL (cth: ?admin=rahsia123)
             const urlParams = new URLSearchParams(window.location.search);
             const adminPass = urlParams.get('admin');
 
+            // Set URL API. Jika ada parameter admin, hantar kata laluan ke GAS
+            let urlUntukDipanggil = API_URL;
             if(adminPass === "rahsia123") {
-                document.getElementById("loadingSkrin").classList.add("hidden");
-                document.getElementById("adminSkrin").classList.remove("hidden");
-                // Skrip tarik data admin akan ditambah kemudian
-                return; 
+                urlUntukDipanggil = API_URL + "?adminPass=rahsia123";
             }
 
-            // Jika bukan admin, muatkan kedai biasa
-            fetch(API_URL)
+            fetch(urlUntukDipanggil)
                 .then(res => res.json())
                 .then(data => {
-                    senaraiProduk = data.produk;
-                    senaraiTetapan = data.tetapan;
-                    
-                    const selectGroup = document.getElementById("inputGroup");
-                    selectGroup.innerHTML = '<option value="">-- Sila Pilih --</option>';
-                    senaraiTetapan.forEach(t => { if(t.JenisGroupWA) selectGroup.add(new Option(t.JenisGroupWA, t.JenisGroupWA)); });
-                    selectGroup.add(new Option("Lain-lain", "Lain-lain"));
-
                     document.getElementById("loadingSkrin").classList.add("hidden");
-                    document.getElementById("kedaiSkrin").classList.remove("hidden");
-                    document.getElementById("btnBakul").classList.remove("hidden");
-                    paparKategori();
+
+                    if(adminPass === "rahsia123") {
+                        // Mod Admin
+                        document.getElementById("adminSkrin").classList.remove("hidden");
+                        paparJadualAdmin(data.tempahan);
+                    } else {
+                        // Mod Pelanggan (Kedai)
+                        senaraiProduk = data.produk;
+                        senaraiTetapan = data.tetapan;
+                        
+                        const selectGroup = document.getElementById("inputGroup");
+                        selectGroup.innerHTML = '<option value="">-- Sila Pilih --</option>';
+                        senaraiTetapan.forEach(t => { if(t.JenisGroupWA) selectGroup.add(new Option(t.JenisGroupWA, t.JenisGroupWA)); });
+                        selectGroup.add(new Option("Lain-lain", "Lain-lain"));
+
+                        document.getElementById("kedaiSkrin").classList.remove("hidden");
+                        document.getElementById("btnBakul").classList.remove("hidden");
+                        paparKategori();
+                    }
+                })
+                .catch(err => {
+                    document.getElementById("loadingSkrin").innerHTML = `<p class="text-red-500 font-bold">Gagal memuatkan sistem. Sila semak pautan anda.</p>`;
                 });
         });
 
+        // ========================================================================
+        // FUNGSI ADMIN
+        // ========================================================================
+        function paparJadualAdmin(dataTempahan) {
+            const tbody = document.getElementById("jadualTempahan");
+            tbody.innerHTML = "";
+            let jumlahSemua = 0;
+
+            if(!dataTempahan || dataTempahan.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">Tiada tempahan direkodkan setakat ini.</td></tr>`;
+                return;
+            }
+
+            dataTempahan.forEach(t => {
+                const tarikhCantik = new Date(t.TarikhMasa).toLocaleString('ms-MY');
+                const amaun = parseFloat(t.JumlahRM) || 0;
+                jumlahSemua += amaun;
+
+                // Format link WhatsApp supaya admin mudah hubungi pelanggan
+                const noTelBersih = t.NoTel.replace(/\D/g, ''); 
+                const linkWA = noTelBersih.startsWith('0') ? `6${noTelBersih}` : noTelBersih;
+
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="border p-2 text-xs text-gray-600">${tarikhCantik}<br><span class="text-[10px] text-gray-400">ID: ${t.ID_Tempahan}</span></td>
+                        <td class="border p-2">
+                            <strong class="text-gray-800">${t.NamaPembeli}</strong><br>
+                            <a href="https://wa.me/${linkWA}" target="_blank" class="text-blue-500 text-xs hover:underline no-print"><i class="fa-brands fa-whatsapp"></i> ${t.NoTel}</a>
+                            <span class="hidden print:inline text-xs">${t.NoTel}</span>
+                        </td>
+                        <td class="border p-2 text-sm">${t.GroupWA}</td>
+                        <td class="border p-2 text-xs whitespace-pre-wrap">${t.SenaraiPesanan}</td>
+                        <td class="border p-2 font-bold text-orange-600 text-right">RM ${amaun.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("totalJualanAdmin").innerText = jumlahSemua.toFixed(2);
+        }
+
+        // ========================================================================
+        // FUNGSI KEDAI (PELANGGAN)
+        // ========================================================================
         function paparKategori() {
             const kategoriUnik = [...new Set(senaraiProduk.map(item => item.Kategori))];
             const container = document.getElementById("kategoriContainer");
             container.innerHTML = ""; 
             kategoriUnik.forEach(kat => {
                 let btn = document.createElement("button");
-                btn.className = "whitespace-nowrap px-4 py-2 rounded-full border border-orange-500 text-orange-600 font-medium hover:bg-orange-500 hover:text-white";
+                btn.className = "whitespace-nowrap px-4 py-2 rounded-full border border-orange-500 text-orange-600 font-medium hover:bg-orange-500 hover:text-white transition focus:outline-none focus:ring-2 focus:ring-orange-300";
                 btn.innerText = kat;
                 btn.onclick = () => paparProduk(kat);
                 container.appendChild(btn);
@@ -163,7 +263,6 @@
             });
         }
 
-        // Fungsi baharu: Semak jika profil dah isi sebelum masuk bakul
         function klikTempah(item) {
             if(!profilUser.nama) {
                 itemTertangguh = item;
@@ -183,9 +282,7 @@
             const t = document.getElementById("inputTel").value.trim();
             const g = document.getElementById("inputGroup").value;
 
-            if(!n || !t || !g) {
-                Swal.fire("Maaf", "Sila isi semua maklumat.", "warning"); return;
-            }
+            if(!n || !t || !g) { Swal.fire("Maaf", "Sila isi semua maklumat.", "warning"); return; }
             profilUser = { nama: n, telefon: t, kumpulanWA: g };
             tutupProfilModal();
             if(itemTertangguh) {
@@ -196,14 +293,8 @@
 
         function tanyaKuantiti(item) {
             Swal.fire({
-                title: item.NamaBarang,
-                text: `${item.Saiz} - RM ${item.Harga}`,
-                input: 'number',
-                inputValue: 1,
-                inputAttributes: { min: 1 },
-                showCancelButton: true,
-                confirmButtonText: 'Masuk Bakul',
-                confirmButtonColor: '#f97316'
+                title: item.NamaBarang, text: `${item.Saiz} - RM ${item.Harga}`, input: 'number', inputValue: 1,
+                inputAttributes: { min: 1 }, showCancelButton: true, confirmButtonText: 'Masuk Bakul', confirmButtonColor: '#f97316'
             }).then((res) => {
                 if (res.isConfirmed && res.value > 0) tambahKeBakul(item, parseInt(res.value));
             });
@@ -213,12 +304,8 @@
             const jumlah = parseFloat(item.Harga) * kuantiti;
             const sediaAda = bakul.findIndex(b => b.nama === item.NamaBarang && b.saiz === item.Saiz);
             
-            if (sediaAda > -1) {
-                bakul[sediaAda].kuantiti += kuantiti;
-                bakul[sediaAda].jumlah += jumlah;
-            } else {
-                bakul.push({ nama: item.NamaBarang, saiz: item.Saiz, hargaSatu: item.Harga, kuantiti: kuantiti, jumlah: jumlah });
-            }
+            if (sediaAda > -1) { bakul[sediaAda].kuantiti += kuantiti; bakul[sediaAda].jumlah += jumlah; } 
+            else { bakul.push({ nama: item.NamaBarang, saiz: item.Saiz, hargaSatu: item.Harga, kuantiti: kuantiti, jumlah: jumlah }); }
             document.getElementById("badgeBakul").innerText = bakul.reduce((total, item) => total + item.kuantiti, 0);
             Swal.fire({icon: 'success', title: 'Dimasukkan!', timer: 1000, showConfirmButton: false});
         }
@@ -238,8 +325,6 @@
                     </div>`;
             });
             document.getElementById("jumlahKeseluruhan").innerText = total.toFixed(2);
-            document.getElementById("badgeBakul").innerText = bakul.reduce((t, item) => t + item.kuantiti, 0);
-            if(bakul.length===0) tutupBakul();
         }
 
         function tutupBakul() { document.getElementById("bakulModal").classList.add("hidden"); }
@@ -259,7 +344,8 @@
                     teksWA += `\n*Jumlah: RM ${total}*\nSila sahkan tempahan saya.`;
                     
                     Swal.fire('Berjaya!', 'Tempahan direkod.', 'success').then(() => {
-                        bakul = []; bukaBakul(); window.open(`https://wa.me/${NO_WHATSAPP_ADMIN}?text=${encodeURIComponent(teksWA)}`, '_blank');
+                        bakul = []; document.getElementById("badgeBakul").innerText = 0; tutupBakul(); 
+                        window.open(`https://wa.me/${NO_WHATSAPP_ADMIN}?text=${encodeURIComponent(teksWA)}`, '_blank');
                     });
                 }
             });
