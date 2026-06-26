@@ -51,14 +51,12 @@
                 </div>
             </div>
 
-            <!-- MENU TAB ADMIN -->
             <div class="flex space-x-2 mb-6 border-b no-print overflow-x-auto">
                 <button onclick="tukarTabAdmin('tabLaporan')" class="px-4 py-2 font-bold text-orange-600 border-b-4 border-orange-500 focus:outline-none" id="btnTabLaporan">Laporan Tempahan</button>
                 <button onclick="tukarTabAdmin('tabBarang')" class="px-4 py-2 font-bold text-gray-500 hover:text-orange-500 focus:outline-none" id="btnTabBarang">Urus Barang</button>
                 <button onclick="tukarTabAdmin('tabTetapan')" class="px-4 py-2 font-bold text-gray-500 hover:text-orange-500 focus:outline-none" id="btnTabTetapan">Tetapan Sistem</button>
             </div>
 
-            <!-- TAB 1: LAPORAN TEMPAHAN -->
             <div id="tabLaporan" class="tab-kandungan">
                 <div class="flex flex-wrap justify-between items-center mb-4 p-4 bg-gray-50 rounded-lg border no-print gap-4">
                     <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-file-invoice-dollar text-orange-500 mr-2"></i>Laporan Tempahan</h3>
@@ -66,12 +64,11 @@
                         <i class="fa-solid fa-print mr-2"></i>Cetak Laporan
                     </button>
                 </div>
-
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-gray-200 text-gray-700 text-sm">
-                                <th class="border p-2">Tarikh & Masa</th>
+                                <th class="border p-2">Tarikh</th>
                                 <th class="border p-2">Pelanggan</th>
                                 <th class="border p-2">Kumpulan</th>
                                 <th class="border p-2 w-1/3">Pesanan</th>
@@ -89,21 +86,19 @@
                 </div>
             </div>
 
-            <!-- TAB 2: URUS BARANG & KUMPULAN -->
             <div id="tabBarang" class="tab-kandungan hidden no-print">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-gray-50 p-4 rounded-lg border shadow-sm">
                         <h3 class="font-bold text-lg mb-4 text-gray-800"><i class="fa-solid fa-plus-circle text-green-500 mr-2"></i>Tambah Barang Jualan</h3>
                         <div class="space-y-3 text-sm">
-                            <div><label class="font-bold">Kategori (Cth: Kuih, Kerepek)</label><input type="text" id="tbhKat" class="w-full border p-2 rounded mt-1"></div>
+                            <div><label class="font-bold">Kategori</label><input type="text" id="tbhKat" class="w-full border p-2 rounded mt-1"></div>
                             <div><label class="font-bold">Nama Barang</label><input type="text" id="tbhNama" class="w-full border p-2 rounded mt-1"></div>
-                            <div><label class="font-bold">Saiz / Berat</label><input type="text" id="tbhSaiz" class="w-full border p-2 rounded mt-1"></div>
+                            <div><label class="font-bold">Saiz</label><input type="text" id="tbhSaiz" class="w-full border p-2 rounded mt-1"></div>
                             <div><label class="font-bold">Harga (RM)</label><input type="number" id="tbhHarga" class="w-full border p-2 rounded mt-1"></div>
                             <div><label class="font-bold">Link Gambar</label><input type="text" id="tbhGambar" class="w-full border p-2 rounded mt-1" placeholder="https://..."></div>
                             <button onclick="simpanBarang()" class="w-full bg-green-600 text-white font-bold py-2 rounded shadow hover:bg-green-700 mt-2">Simpan Barang</button>
                         </div>
                     </div>
-
                     <div class="bg-gray-50 p-4 rounded-lg border shadow-sm h-fit">
                         <h3 class="font-bold text-lg mb-4 text-gray-800"><i class="fa-solid fa-users text-blue-500 mr-2"></i>Tambah Group WA</h3>
                         <div class="space-y-3 text-sm">
@@ -114,61 +109,39 @@
                 </div>
             </div>
 
-            <!-- TAB 3: TETAPAN SISTEM -->
             <div id="tabTetapan" class="tab-kandungan hidden no-print">
-                <div class="bg-gray-50 p-4 rounded-lg border shadow-sm max-w-lg mx-auto">
+                <div class="bg-gray-50 p-6 rounded-lg border shadow-sm max-w-lg mx-auto">
                     <h3 class="font-bold text-lg mb-4 text-gray-800"><i class="fa-solid fa-gears text-orange-500 mr-2"></i>Tetapan Tempahan</h3>
                     <div class="space-y-4 text-sm">
                         <div>
-                            <label class="font-bold block mb-1">Status Sesi Tempahan</label>
-                            <select id="statusKedai" class="w-full border p-2 rounded font-bold">
+                            <label class="font-bold block mb-1">Status Kedai</label>
+                            <select id="tetapanStatus" class="w-full border p-2 rounded font-bold">
                                 <option value="BUKA" class="text-green-600">BUKA (Boleh Memesan)</option>
                                 <option value="TUTUP" class="text-red-600">TUTUP (Tempahan Ditutup)</option>
                             </select>
                         </div>
-                        <div><label class="font-bold">Tarikh Buka Tempahan</label><input type="date" class="w-full border p-2 rounded mt-1"></div>
-                        <div><label class="font-bold">Tarikh Tutup Tempahan</label><input type="date" class="w-full border p-2 rounded mt-1"></div>
-                        <div><label class="font-bold">Tarikh Jangkaan Terima Barang</label><input type="date" class="w-full border p-2 rounded mt-1"></div>
-                        <p class="text-xs text-gray-500 mt-2 italic">Nota: Pilihan menu ini sedia untuk dihubungkan ke Google Sheet pangkalan data anda pada fasa berikutnya.</p>
+                        <div><label class="font-bold">Tarikh Tutup Tempahan</label><input type="date" id="tetapanTutup" class="w-full border p-2 rounded mt-1"></div>
+                        <div><label class="font-bold">Tarikh Jangkaan Terima</label><input type="date" id="tetapanTerima" class="w-full border p-2 rounded mt-1"></div>
+                        <button onclick="simpanTetapanSistem()" class="w-full bg-blue-600 text-white font-bold py-3 rounded shadow hover:bg-blue-700 mt-2">Simpan Perubahan</button>
                     </div>
+
+                    <hr class="my-6 border-red-200">
+                    <h3 class="font-bold text-red-600 mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Zon Bahaya (Sesi Baharu)</h3>
+                    <p class="text-xs text-gray-600 mb-3">Tindakan ini akan memadamkan SEMUA senarai pembeli pada Laporan Tempahan untuk memulakan sesi jualan yang baharu. Pastikan anda telah mencetak laporan sebelum menekan butang ini.</p>
+                    <button onclick="resetSistem()" class="w-full bg-red-600 text-white font-bold py-2 rounded shadow hover:bg-red-700">Padam & Reset Semua Tempahan</button>
                 </div>
             </div>
         </div>
 
         <!-- ================= BAHAGIAN KEDAI PELANGGAN ================= -->
         <div id="kedaiSkrin" class="hidden">
-            
-            <!-- BANNER MAKLUMAT TEMPAHAN (BARU) -->
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 shadow-sm">
-                <div class="flex items-center mb-3 border-b border-blue-200 pb-2">
-                    <i class="fa-solid fa-bullhorn text-blue-600 text-xl mr-3"></i>
-                    <h3 class="font-bold text-blue-800 text-lg">Maklumat Sesi Tempahan</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-blue-800 ml-1">
-                    <div>
-                        <i class="fa-solid fa-door-open w-5 text-center text-green-600"></i> 
-                        <strong>Status:</strong> <span class="text-green-600 font-bold">DIBUKA</span>
-                    </div>
-                    <div>
-                        <i class="fa-regular fa-clock w-5 text-center text-red-500"></i> 
-                        <strong>Tutup Order:</strong> 30 Jun 2026
-                    </div>
-                    <div class="md:col-span-2">
-                        <i class="fa-solid fa-truck-fast w-5 text-center text-orange-500"></i> 
-                        <strong>Jangkaan Terima Barang:</strong> 6 Julai 2026
-                    </div>
-                </div>
-            </div>
-
-            <!-- BUTANG KATEGORI -->
+            <div id="bannerTempahan"></div>
             <div class="mb-6 flex space-x-2 overflow-x-auto py-2" id="kategoriContainer"></div>
-            
-            <!-- SENARAI PRODUK -->
             <div id="produkGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
         </div>
     </main>
 
-    <!-- MODAL PROFIL -->
+    <!-- MODAL PROFIL & BAKUL (DIPENDEKKAN UNTUK RUANG) -->
     <div id="profilModal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center px-4 no-print">
         <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
             <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Maklumat Pembeli</h2>
@@ -184,7 +157,6 @@
         </div>
     </div>
 
-    <!-- MODAL BAKUL (PESANAN ANDA) -->
     <div id="bakulModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-end md:items-center justify-center no-print">
         <div class="bg-white w-full md:w-2/3 lg:w-1/2 md:rounded-xl rounded-t-xl h-[80vh] md:h-auto flex flex-col shadow-2xl">
             <div class="p-4 border-b flex justify-between bg-gray-50 rounded-t-xl">
@@ -205,7 +177,7 @@
         const NO_WHATSAPP_ADMIN = "60139100570"; 
         // ========================================================================
 
-        let senaraiProduk = [], senaraiTetapan = [], bakul = [];
+        let senaraiProduk = [], senaraiTetapan = [], bakul = [], dataSistem = {};
         let profilUser = { nama: "", telefon: "", kumpulanWA: "" };
         let itemTertangguh = null;
 
@@ -218,10 +190,17 @@
 
             fetch(urlUntukDipanggil).then(res => res.json()).then(data => {
                 document.getElementById("loadingSkrin").classList.add("hidden");
+                dataSistem = data.sistem[0] || {Status: "BUKA", TarikhTutup: "", TarikhTerima: ""};
 
                 if(adminPass === "rahsia123") {
                     document.getElementById("adminSkrin").classList.remove("hidden");
                     paparJadualAdmin(data.tempahan);
+                    
+                    // Isi borang tetapan dengan data semasa
+                    document.getElementById("tetapanStatus").value = dataSistem.Status || "BUKA";
+                    document.getElementById("tetapanTutup").value = dataSistem.TarikhTutup ? dataSistem.TarikhTutup.substring(0,10) : "";
+                    document.getElementById("tetapanTerima").value = dataSistem.TarikhTerima ? dataSistem.TarikhTerima.substring(0,10) : "";
+
                 } else {
                     senaraiProduk = data.produk;
                     senaraiTetapan = data.tetapan;
@@ -232,7 +211,7 @@
                     selectGroup.add(new Option("Lain-lain", "Lain-lain"));
 
                     document.getElementById("kedaiSkrin").classList.remove("hidden");
-                    document.getElementById("btnBakul").classList.remove("hidden");
+                    paparBanner();
                     paparKategori();
                 }
             }).catch(err => {
@@ -240,11 +219,56 @@
             });
         });
 
+        // ------------------ FUNGSI ADMIN BAHARU ------------------
+        function simpanTetapanSistem() {
+            const stat = document.getElementById("tetapanStatus").value;
+            const tutup = document.getElementById("tetapanTutup").value;
+            const terima = document.getElementById("tetapanTerima").value;
+            
+            Swal.fire({ title: 'Menyimpan...', didOpen: () => { Swal.showLoading(); } });
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: "simpanTetapan", status: stat, tarikhTutup: tutup, tarikhTerima: terima }),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            }).then(res => res.json()).then(respon => {
+                if(respon.status === "berjaya") Swal.fire('Berjaya!', 'Maklumat sesi telah dikemas kini.', 'success');
+            });
+        }
+
+        function resetSistem() {
+            Swal.fire({
+                title: 'Amaran Bahaya!',
+                text: "Semua rekod pembeli lama dalam Google Sheet akan dipadam sepenuhnya. Anda pasti?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Padam Semua!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({ title: 'Memadam Data...', didOpen: () => { Swal.showLoading(); } });
+                    fetch(API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: "resetTempahan" }),
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+                    }).then(res => res.json()).then(respon => {
+                        if(respon.status === "berjaya") {
+                            Swal.fire('Terpadam!', 'Jadual tempahan telah dibersihkan untuk sesi baharu.', 'success');
+                            document.getElementById("jadualTempahan").innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">Tiada tempahan setakat ini.</td></tr>`;
+                            document.getElementById("totalJualanAdmin").innerText = "0.00";
+                        }
+                    });
+                }
+            });
+        }
+
+        // ------------------ KOD ASAL YANG LAIN ------------------
         function tukarTabAdmin(tabId) {
             document.querySelectorAll('.tab-kandungan').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('#btnTabLaporan, #btnTabBarang, #btnTabTetapan').forEach(el => {
-                el.classList.remove('border-b-4', 'border-orange-500', 'text-orange-600');
-                el.classList.add('text-gray-500');
+                el.classList.remove('border-b-4', 'border-orange-500', 'text-orange-600'); el.classList.add('text-gray-500');
             });
             document.getElementById(tabId).classList.remove('hidden');
             let btnAktif = tabId === 'tabLaporan' ? 'btnTabLaporan' : (tabId === 'tabBarang' ? 'btnTabBarang' : 'btnTabTetapan');
@@ -253,204 +277,114 @@
         }
 
         function paparJadualAdmin(dataTempahan) {
-            const tbody = document.getElementById("jadualTempahan");
-            tbody.innerHTML = "";
-            let jumlahSemua = 0;
-
-            if(!dataTempahan || dataTempahan.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">Tiada tempahan setakat ini.</td></tr>`;
-                return;
-            }
-
+            const tbody = document.getElementById("jadualTempahan"); tbody.innerHTML = ""; let jumlahSemua = 0;
+            if(!dataTempahan || dataTempahan.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">Tiada tempahan setakat ini.</td></tr>`; return; }
             dataTempahan.forEach(t => {
                 const tarikhCantik = t.TarikhMasa ? new Date(t.TarikhMasa).toLocaleString('ms-MY') : '-';
-                const amaun = parseFloat(t.JumlahRM) || 0;
-                jumlahSemua += amaun;
-
-                const telText = String(t.NoTel || "");
-                const noTelBersih = telText.replace(/\D/g, ''); 
-                const linkWA = noTelBersih.startsWith('0') ? `6${noTelBersih}` : noTelBersih;
-
-                tbody.innerHTML += `
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="border p-2 text-xs text-gray-600">${tarikhCantik}<br><span class="text-[10px] text-gray-400">ID: ${t.ID_Tempahan}</span></td>
-                        <td class="border p-2"><strong class="text-gray-800">${t.NamaPembeli}</strong><br><a href="https://wa.me/${linkWA}" target="_blank" class="text-blue-500 text-xs no-print">${telText}</a></td>
-                        <td class="border p-2 text-sm">${t.GroupWA}</td>
-                        <td class="border p-2 text-xs whitespace-pre-wrap">${t.SenaraiPesanan}</td>
-                        <td class="border p-2 font-bold text-orange-600 text-right">RM ${amaun.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-            document.getElementById("totalJualanAdmin").innerText = jumlahSemua.toFixed(2);
+                const amaun = parseFloat(t.JumlahRM) || 0; jumlahSemua += amaun;
+                const telText = String(t.NoTel || ""); const linkWA = telText.replace(/\D/g, '').startsWith('0') ? `6${telText.replace(/\D/g, '')}` : telText.replace(/\D/g, '');
+                tbody.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="border p-2 text-xs text-gray-600">${tarikhCantik}<br><span class="text-[10px] text-gray-400">ID: ${t.ID_Tempahan}</span></td><td class="border p-2"><strong class="text-gray-800">${t.NamaPembeli}</strong><br><a href="https://wa.me/${linkWA}" target="_blank" class="text-blue-500 text-xs no-print">${telText}</a></td><td class="border p-2 text-sm">${t.GroupWA}</td><td class="border p-2 text-xs whitespace-pre-wrap">${t.SenaraiPesanan}</td><td class="border p-2 font-bold text-orange-600 text-right">RM ${amaun.toFixed(2)}</td></tr>`;
+            }); document.getElementById("totalJualanAdmin").innerText = jumlahSemua.toFixed(2);
         }
 
         function simpanBarang() {
-            const kat = document.getElementById("tbhKat").value.trim();
-            const nama = document.getElementById("tbhNama").value.trim();
-            const saiz = document.getElementById("tbhSaiz").value.trim();
-            const harga = document.getElementById("tbhHarga").value.trim();
-            const gambar = document.getElementById("tbhGambar").value.trim() || "https://via.placeholder.com/150";
-
-            if(!kat || !nama || !saiz || !harga) { Swal.fire("Maaf", "Lengkapkan borang.", "warning"); return; }
+            const k = document.getElementById("tbhKat").value.trim(), n = document.getElementById("tbhNama").value.trim(), s = document.getElementById("tbhSaiz").value.trim(), h = document.getElementById("tbhHarga").value.trim(), g = document.getElementById("tbhGambar").value.trim() || "https://via.placeholder.com/150";
+            if(!k || !n || !s || !h) return Swal.fire("Maaf", "Lengkapkan borang.", "warning");
             Swal.fire({ title: 'Menyimpan...', didOpen: () => { Swal.showLoading(); } });
-
-            fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: "tambahBarang", kategori: kat, nama: nama, saiz: saiz, harga: harga, gambar: gambar }),
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-            }).then(res => res.json()).then(respon => {
-                if(respon.status === "berjaya") {
-                    Swal.fire('Berjaya!', 'Barang ditambah.', 'success');
-                    ['tbhKat', 'tbhNama', 'tbhSaiz', 'tbhHarga', 'tbhGambar'].forEach(id => document.getElementById(id).value = '');
-                }
-            });
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "tambahBarang", kategori: k, nama: n, saiz: s, harga: h, gambar: g }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } }).then(res => res.json()).then(r => { if(r.status === "berjaya") { Swal.fire('Berjaya!', 'Barang ditambah.', 'success'); ['tbhKat', 'tbhNama', 'tbhSaiz', 'tbhHarga', 'tbhGambar'].forEach(id => document.getElementById(id).value = ''); } });
         }
 
         function simpanGroup() {
-            const group = document.getElementById("tbhGroup").value.trim();
-            if(!group) return Swal.fire("Maaf", "Isi nama group.", "warning");
+            const group = document.getElementById("tbhGroup").value.trim(); if(!group) return Swal.fire("Maaf", "Isi nama group.", "warning");
             Swal.fire({ title: 'Menyimpan...', didOpen: () => { Swal.showLoading(); } });
+            fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: "tambahGroup", groupWA: group }), headers: { 'Content-Type': 'text/plain;charset=utf-8' } }).then(res => res.json()).then(r => { if(r.status === "berjaya") { Swal.fire('Berjaya!', 'Group ditambah.', 'success'); document.getElementById("tbhGroup").value = ""; } });
+        }
 
-            fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: "tambahGroup", groupWA: group }),
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-            }).then(res => res.json()).then(respon => {
-                if(respon.status === "berjaya") {
-                    Swal.fire('Berjaya!', 'Group ditambah.', 'success');
-                    document.getElementById("tbhGroup").value = "";
-                }
-            });
+        // FUNGSI BANNER DINAMIK
+        function paparBanner() {
+            const banner = document.getElementById("bannerTempahan");
+            const formatTkh = (tkh) => tkh ? new Date(tkh).toLocaleDateString('ms-MY', {day: 'numeric', month: 'short', year: 'numeric'}) : "Belum ditetapkan";
+            
+            const isBuka = dataSistem.Status === "BUKA";
+            const clr = isBuka ? "text-green-600" : "text-red-600";
+            const bg = isBuka ? "bg-blue-50 border-blue-200" : "bg-red-50 border-red-200 text-red-800";
+            
+            banner.className = `${bg} border rounded-xl p-4 mb-6 shadow-sm`;
+            banner.innerHTML = `
+                <div class="flex items-center mb-3 border-b pb-2 ${isBuka ? 'border-blue-200' : 'border-red-200'}">
+                    <i class="fa-solid fa-bullhorn text-xl mr-3 ${isBuka ? 'text-blue-600' : 'text-red-600'}"></i>
+                    <h3 class="font-bold text-lg ${isBuka ? 'text-blue-800' : 'text-red-800'}">Maklumat Sesi Tempahan</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm ml-1">
+                    <div><i class="fa-solid ${isBuka ? 'fa-door-open' : 'fa-door-closed'} w-5 text-center ${clr}"></i> <strong>Status:</strong> <span class="${clr} font-bold">${isBuka ? 'DIBUKA' : 'DITUTUP'}</span></div>
+                    <div><i class="fa-regular fa-clock w-5 text-center text-red-500"></i> <strong>Tutup Order:</strong> ${formatTkh(dataSistem.TarikhTutup)}</div>
+                    <div class="md:col-span-2"><i class="fa-solid fa-truck-fast w-5 text-center text-orange-500"></i> <strong>Jangkaan Terima:</strong> ${formatTkh(dataSistem.TarikhTerima)}</div>
+                </div>`;
+                
+            if(isBuka) document.getElementById("btnBakul").classList.remove("hidden");
         }
 
         function paparKategori() {
             const kategoriUnik = [...new Set(senaraiProduk.map(item => item.Kategori))];
-            const container = document.getElementById("kategoriContainer");
-            container.innerHTML = ""; 
+            const container = document.getElementById("kategoriContainer"); container.innerHTML = ""; 
             kategoriUnik.forEach(kat => {
-                let btn = document.createElement("button");
-                btn.className = "whitespace-nowrap px-4 py-2 rounded-full border border-orange-500 text-orange-600 font-medium hover:bg-orange-500 hover:text-white";
-                btn.innerText = kat; btn.onclick = () => paparProduk(kat);
-                container.appendChild(btn);
+                let btn = document.createElement("button"); btn.className = "whitespace-nowrap px-4 py-2 rounded-full border border-orange-500 text-orange-600 font-medium hover:bg-orange-500 hover:text-white"; btn.innerText = kat; btn.onclick = () => paparProduk(kat); container.appendChild(btn);
             });
             if(kategoriUnik.length > 0) paparProduk(kategoriUnik[0]);
         }
 
         function paparProduk(kategoriDipilih) {
-            const grid = document.getElementById("produkGrid"); 
-            grid.innerHTML = ""; 
-            
-            senaraiProduk.filter(item => item.Kategori === kategoriDipilih).forEach(item => {
-                const card = document.createElement("div"); 
-                card.className = "bg-white rounded-xl shadow-md overflow-hidden flex flex-col";
-                card.innerHTML = `
-                    <div class="aspect-[3/4] bg-gray-200 relative">
-                        <img src="${item.Gambar}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-3 flex-1 flex flex-col">
-                        <h3 class="font-bold text-gray-800 text-sm mb-1">${item.NamaBarang}</h3>
-                        <p class="text-xs text-gray-500 mb-1">${item.Saiz}</p>
-                        <p class="font-bold text-orange-600 mb-2">RM ${item.Harga}</p>
-                        <button class="btn-tempah mt-auto w-full bg-orange-100 text-orange-600 border border-orange-500 font-bold py-1.5 rounded-lg">Pesan</button>
-                    </div>`;
-                
-                const butangTempah = card.querySelector('.btn-tempah');
-                butangTempah.addEventListener('click', () => klikTempah(item));
+            const grid = document.getElementById("produkGrid"); grid.innerHTML = ""; 
+            const isTutup = dataSistem.Status === "TUTUP";
 
+            senaraiProduk.filter(item => item.Kategori === kategoriDipilih).forEach(item => {
+                const card = document.createElement("div"); card.className = "bg-white rounded-xl shadow-md overflow-hidden flex flex-col opacity-" + (isTutup ? "75" : "100");
+                
+                // Jika kedai tutup, butang menjadi kelabu dan tidak boleh ditekan
+                const btnHtml = isTutup 
+                    ? `<button disabled class="mt-auto w-full bg-gray-200 text-gray-500 border border-gray-300 font-bold py-1.5 rounded-lg cursor-not-allowed">Habis Sesi</button>`
+                    : `<button class="btn-tempah mt-auto w-full bg-orange-100 text-orange-600 border border-orange-500 font-bold py-1.5 rounded-lg">Pesan</button>`;
+
+                card.innerHTML = `<div class="aspect-[3/4] bg-gray-200 relative"><img src="${item.Gambar}" class="w-full h-full object-cover ${isTutup ? 'grayscale' : ''}"></div><div class="p-3 flex-1 flex flex-col"><h3 class="font-bold text-gray-800 text-sm mb-1">${item.NamaBarang}</h3><p class="text-xs text-gray-500 mb-1">${item.Saiz}</p><p class="font-bold text-orange-600 mb-2">RM ${item.Harga}</p>${btnHtml}</div>`;
+                
+                if(!isTutup) {
+                    const butangTempah = card.querySelector('.btn-tempah');
+                    butangTempah.addEventListener('click', () => klikTempah(item));
+                }
                 grid.appendChild(card);
             });
         }
 
-        function klikTempah(item) {
-            if(!profilUser.nama) { 
-                itemTertangguh = item; 
-                document.getElementById("profilModal").classList.remove("hidden"); 
-            } 
-            else { 
-                tanyaKuantiti(item); 
-            }
-        }
-
-        function batalProfilModal() { 
-            document.getElementById("profilModal").classList.add("hidden"); 
-            itemTertangguh = null; 
-        }
-
+        function klikTempah(item) { if(!profilUser.nama) { itemTertangguh = item; document.getElementById("profilModal").classList.remove("hidden"); } else { tanyaKuantiti(item); } }
+        function batalProfilModal() { document.getElementById("profilModal").classList.add("hidden"); itemTertangguh = null; }
+        
         function simpanProfil() {
-            const n = document.getElementById("inputNama").value.trim();
-            const t = document.getElementById("inputTel").value.trim();
-            const g = document.getElementById("inputGroup").value;
-            
-            if(!n || !t || !g) {
-                if(typeof Swal !== 'undefined') {
-                    Swal.fire("Maklumat Tidak Lengkap", "Sila pastikan Nama, No. Telefon dan Kumpulan WhatsApp telah diisi & dipilih.", "warning");
-                } else {
-                    alert("MAAF: Sila pastikan Nama, No. Telefon dan Kumpulan WhatsApp telah diisi!");
-                }
-                return; 
-            }
-            
-            profilUser = { nama: n, telefon: t, kumpulanWA: g }; 
-            document.getElementById("profilModal").classList.add("hidden"); 
-            
-            if(itemTertangguh) { 
-                tanyaKuantiti(itemTertangguh); 
-                itemTertangguh = null; 
-            }
+            const n = document.getElementById("inputNama").value.trim(), t = document.getElementById("inputTel").value.trim(), g = document.getElementById("inputGroup").value;
+            if(!n || !t || !g) { if(typeof Swal !== 'undefined') Swal.fire("Maklumat Tidak Lengkap", "Sila lengkapkan borang.", "warning"); else alert("MAAF: Sila lengkapkan borang!"); return; }
+            profilUser = { nama: n, telefon: t, kumpulanWA: g }; document.getElementById("profilModal").classList.add("hidden"); 
+            if(itemTertangguh) { tanyaKuantiti(itemTertangguh); itemTertangguh = null; }
         }
 
         function tanyaKuantiti(item) {
             if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    title: item.NamaBarang, 
-                    text: `${item.Saiz} - RM ${item.Harga}`, 
-                    input: 'number', 
-                    inputValue: 1, 
-                    inputAttributes: { min: 1 }, 
-                    showCancelButton: true, 
-                    confirmButtonText: 'Masuk Bakul', 
-                    confirmButtonColor: '#f97316'
-                }).then((res) => {
-                    if (res.isConfirmed && res.value > 0) tambahKeBakul(item, parseInt(res.value));
-                });
+                Swal.fire({ title: item.NamaBarang, text: `${item.Saiz} - RM ${item.Harga}`, input: 'number', inputValue: 1, inputAttributes: { min: 1 }, showCancelButton: true, confirmButtonText: 'Masuk Bakul', confirmButtonColor: '#f97316' }).then((res) => { if (res.isConfirmed && res.value > 0) tambahKeBakul(item, parseInt(res.value)); });
             } else {
-                let kuantiti = prompt(`Berapa banyak ${item.NamaBarang} anda mahu beli?\n(${item.Saiz} - RM ${item.Harga})\n\nSila masukkan nombor (Contoh: 1, 2, 3):`, "1");
-                if (kuantiti !== null && parseInt(kuantiti) > 0) {
-                    tambahKeBakul(item, parseInt(kuantiti));
-                }
+                let kuantiti = prompt(`Berapa banyak ${item.NamaBarang}?\nSila masukkan nombor:`, "1");
+                if (kuantiti !== null && parseInt(kuantiti) > 0) tambahKeBakul(item, parseInt(kuantiti));
             }
         }
 
         function tambahKeBakul(item, kuantiti) {
-            const jumlah = parseFloat(item.Harga) * kuantiti;
-            const sediaAda = bakul.findIndex(b => b.nama === item.NamaBarang && b.saiz === item.Saiz);
-            
-            if (sediaAda > -1) { 
-                bakul[sediaAda].kuantiti += kuantiti; 
-                bakul[sediaAda].jumlah += jumlah; 
-            } else { 
-                bakul.push({ nama: item.NamaBarang, saiz: item.Saiz, hargaSatu: item.Harga, kuantiti: kuantiti, jumlah: jumlah }); 
-            }
-            
+            const jumlah = parseFloat(item.Harga) * kuantiti; const sediaAda = bakul.findIndex(b => b.nama === item.NamaBarang && b.saiz === item.Saiz);
+            if (sediaAda > -1) { bakul[sediaAda].kuantiti += kuantiti; bakul[sediaAda].jumlah += jumlah; } else { bakul.push({ nama: item.NamaBarang, saiz: item.Saiz, hargaSatu: item.Harga, kuantiti: kuantiti, jumlah: jumlah }); }
             document.getElementById("badgeBakul").innerText = bakul.reduce((total, item) => total + item.kuantiti, 0);
-            
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({icon: 'success', title: 'Dimasukkan!', timer: 1000, showConfirmButton: false});
-            } else {
-                alert(`${kuantiti}x ${item.NamaBarang} telah dimasukkan ke dalam bakul.`);
-            }
+            if (typeof Swal !== 'undefined') Swal.fire({icon: 'success', title: 'Dimasukkan!', timer: 1000, showConfirmButton: false}); else alert(`Dimasukkan ke dalam bakul.`);
         }
 
         function bukaBakul() {
             if(bakul.length===0) return Swal.fire("Bakul Kosong", "", "info");
-            document.getElementById("bakulModal").classList.remove("hidden");
-            const container = document.getElementById("senaraiBakul"); container.innerHTML = ""; let total = 0;
-            bakul.forEach((item, i) => {
-                total += item.jumlah;
-                container.innerHTML += `<div class="flex justify-between items-center bg-white p-3 border mb-2 rounded">
-                    <div><h4 class="font-bold text-sm">${item.nama}</h4><p class="text-xs text-gray-500">${item.saiz} | RM ${item.hargaSatu} x ${item.kuantiti}</p></div>
-                    <div class="flex items-center space-x-4"><span class="font-bold text-orange-600">RM ${item.jumlah.toFixed(2)}</span><button onclick="bakul.splice(${i},1); bukaBakul();" class="text-red-500"><i class="fa-solid fa-trash"></i></button></div></div>`;
-            });
+            document.getElementById("bakulModal").classList.remove("hidden"); const container = document.getElementById("senaraiBakul"); container.innerHTML = ""; let total = 0;
+            bakul.forEach((item, i) => { total += item.jumlah; container.innerHTML += `<div class="flex justify-between items-center bg-white p-3 border mb-2 rounded"><div><h4 class="font-bold text-sm">${item.nama}</h4><p class="text-xs text-gray-500">${item.saiz} | RM ${item.hargaSatu} x ${item.kuantiti}</p></div><div class="flex items-center space-x-4"><span class="font-bold text-orange-600">RM ${item.jumlah.toFixed(2)}</span><button onclick="bakul.splice(${i},1); bukaBakul();" class="text-red-500"><i class="fa-solid fa-trash"></i></button></div></div>`; });
             document.getElementById("jumlahKeseluruhan").innerText = total.toFixed(2);
         }
 
@@ -459,20 +393,13 @@
         function hantarTempahan() {
             const total = bakul.reduce((t, i) => t + i.jumlah, 0);
             const data = { action: "tempah", nama: profilUser.nama, telefon: profilUser.telefon, kumpulanWA: profilUser.kumpulanWA, bakul: bakul, jumlahKeseluruhan: total };
-
             Swal.fire({ title: 'Memproses...', didOpen: () => { Swal.showLoading(); } });
-
-            fetch(API_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain;charset=utf-8' } })
-            .then(res => res.json()).then(respon => {
+            fetch(API_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'text/plain;charset=utf-8' } }).then(res => res.json()).then(respon => {
                 if(respon.status === "berjaya") {
                     let teksWA = `*TEMPAHAN BARU KLICKSNEK* 🍪\nID: ${respon.id}\n\n*Nama:* ${profilUser.nama}\n*Tel:* ${profilUser.telefon}\n*Kumpulan:* ${profilUser.kumpulanWA}\n\n*Pesanan:*\n`;
                     bakul.forEach(i => teksWA += `- ${i.nama} (${i.saiz}) x${i.kuantiti} = RM${i.jumlah}\n`);
                     teksWA += `\n*Jumlah: RM ${total}*\nSila sahkan tempahan saya.`;
-                    
-                    Swal.fire('Berjaya!', 'Tempahan direkod.', 'success').then(() => {
-                        bakul = []; document.getElementById("badgeBakul").innerText = 0; tutupBakul(); 
-                        window.open(`https://wa.me/${NO_WHATSAPP_ADMIN}?text=${encodeURIComponent(teksWA)}`, '_blank');
-                    });
+                    Swal.fire('Berjaya!', 'Tempahan direkod.', 'success').then(() => { bakul = []; document.getElementById("badgeBakul").innerText = 0; tutupBakul(); window.open(`https://wa.me/${NO_WHATSAPP_ADMIN}?text=${encodeURIComponent(teksWA)}`, '_blank'); });
                 }
             });
         }
