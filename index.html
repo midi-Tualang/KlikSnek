@@ -307,10 +307,13 @@
             const grid = document.getElementById("produkGrid"); grid.innerHTML = ""; 
             senaraiProduk.filter(item => item.Kategori === kategoriDipilih).forEach(item => {
                 const card = document.createElement("div"); card.className = "bg-white rounded-xl shadow-md overflow-hidden flex flex-col";
-                card.innerHTML = `<div class="h-40 bg-gray-200 relative"><img src="${item.Gambar}" class="w-full h-full object-cover"></div>
+                
+                // KOD YANG TELAH DIUBAH (h-40 ditukar kepada aspect-[3/4])
+                card.innerHTML = `<div class="aspect-[3/4] bg-gray-200 relative"><img src="${item.Gambar}" class="w-full h-full object-cover"></div>
                     <div class="p-3 flex-1 flex flex-col"><h3 class="font-bold text-gray-800 text-sm mb-1">${item.NamaBarang}</h3>
                     <p class="text-xs text-gray-500 mb-1">${item.Saiz}</p><p class="font-bold text-orange-600 mb-2">RM ${item.Harga}</p>
                     <button onclick='klikTempah(${JSON.stringify(item)})' class="mt-auto w-full bg-orange-100 text-orange-600 border border-orange-500 font-bold py-1.5 rounded-lg">Tempah</button></div>`;
+                
                 grid.appendChild(card);
             });
         }
