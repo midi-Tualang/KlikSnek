@@ -38,6 +38,7 @@
             <p class="text-lg font-semibold text-gray-600">Memuatkan sistem...</p>
         </div>
 
+        <!-- ================= BAHAGIAN ADMIN ================= -->
         <div id="adminSkrin" class="hidden bg-white p-6 rounded-xl shadow-lg w-full">
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b pb-4 no-print">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">
@@ -50,12 +51,14 @@
                 </div>
             </div>
 
+            <!-- MENU TAB ADMIN -->
             <div class="flex space-x-2 mb-6 border-b no-print overflow-x-auto">
                 <button onclick="tukarTabAdmin('tabLaporan')" class="px-4 py-2 font-bold text-orange-600 border-b-4 border-orange-500 focus:outline-none" id="btnTabLaporan">Laporan Tempahan</button>
                 <button onclick="tukarTabAdmin('tabBarang')" class="px-4 py-2 font-bold text-gray-500 hover:text-orange-500 focus:outline-none" id="btnTabBarang">Urus Barang</button>
                 <button onclick="tukarTabAdmin('tabTetapan')" class="px-4 py-2 font-bold text-gray-500 hover:text-orange-500 focus:outline-none" id="btnTabTetapan">Tetapan Sistem</button>
             </div>
 
+            <!-- TAB 1: LAPORAN TEMPAHAN -->
             <div id="tabLaporan" class="tab-kandungan">
                 <div class="flex flex-wrap justify-between items-center mb-4 p-4 bg-gray-50 rounded-lg border no-print gap-4">
                     <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-file-invoice-dollar text-orange-500 mr-2"></i>Laporan Tempahan</h3>
@@ -86,6 +89,7 @@
                 </div>
             </div>
 
+            <!-- TAB 2: URUS BARANG & KUMPULAN -->
             <div id="tabBarang" class="tab-kandungan hidden no-print">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-gray-50 p-4 rounded-lg border shadow-sm">
@@ -110,6 +114,7 @@
                 </div>
             </div>
 
+            <!-- TAB 3: TETAPAN SISTEM -->
             <div id="tabTetapan" class="tab-kandungan hidden no-print">
                 <div class="bg-gray-50 p-4 rounded-lg border shadow-sm max-w-lg mx-auto">
                     <h3 class="font-bold text-lg mb-4 text-gray-800"><i class="fa-solid fa-gears text-orange-500 mr-2"></i>Tetapan Tempahan</h3>
@@ -130,12 +135,40 @@
             </div>
         </div>
 
+        <!-- ================= BAHAGIAN KEDAI PELANGGAN ================= -->
         <div id="kedaiSkrin" class="hidden">
+            
+            <!-- BANNER MAKLUMAT TEMPAHAN (BARU) -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 shadow-sm">
+                <div class="flex items-center mb-3 border-b border-blue-200 pb-2">
+                    <i class="fa-solid fa-bullhorn text-blue-600 text-xl mr-3"></i>
+                    <h3 class="font-bold text-blue-800 text-lg">Maklumat Sesi Tempahan</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-blue-800 ml-1">
+                    <div>
+                        <i class="fa-solid fa-door-open w-5 text-center text-green-600"></i> 
+                        <strong>Status:</strong> <span class="text-green-600 font-bold">DIBUKA</span>
+                    </div>
+                    <div>
+                        <i class="fa-regular fa-clock w-5 text-center text-red-500"></i> 
+                        <strong>Tutup Order:</strong> 30 Jun 2026
+                    </div>
+                    <div class="md:col-span-2">
+                        <i class="fa-solid fa-truck-fast w-5 text-center text-orange-500"></i> 
+                        <strong>Jangkaan Terima Barang:</strong> 6 Julai 2026
+                    </div>
+                </div>
+            </div>
+
+            <!-- BUTANG KATEGORI -->
             <div class="mb-6 flex space-x-2 overflow-x-auto py-2" id="kategoriContainer"></div>
+            
+            <!-- SENARAI PRODUK -->
             <div id="produkGrid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
         </div>
     </main>
 
+    <!-- MODAL PROFIL -->
     <div id="profilModal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center px-4 no-print">
         <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
             <h2 class="text-xl font-bold mb-4 text-gray-800 border-b pb-2">Maklumat Pembeli</h2>
@@ -151,6 +184,7 @@
         </div>
     </div>
 
+    <!-- MODAL BAKUL (PESANAN ANDA) -->
     <div id="bakulModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-end md:items-center justify-center no-print">
         <div class="bg-white w-full md:w-2/3 lg:w-1/2 md:rounded-xl rounded-t-xl h-[80vh] md:h-auto flex flex-col shadow-2xl">
             <div class="p-4 border-b flex justify-between bg-gray-50 rounded-t-xl">
