@@ -318,9 +318,29 @@
             });
         }
 
-        function klikTempah(item) {
-            if(!profilUser.nama) { itemTertangguh = item; document.getElementById("profilModal").classList.remove("hidden"); } 
-            else { tanyaKuantiti(item); }
+        function tanyaKuantiti(item) {
+            // Semak jika skrip SweetAlert berjaya dimuatkan
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: item.NamaBarang, 
+                    text: `${item.Saiz} - RM ${item.Harga}`, 
+                    input: 'number', 
+                    inputValue: 1, 
+                    inputAttributes: { min: 1 }, 
+                    showCancelButton: true, 
+                    confirmButtonText: 'Masuk Bakul', 
+                    confirmButtonColor: '#f97316'
+                }).then((res) => {
+                    if (res.isConfirmed && res.value > 0) tambahKeBakul(item, parseInt(res.value));
+                });
+            } else {
+                // PELAN B: Jika SweetAlert disekat oleh telefon, guna prompt biasa
+                let kuantiti = prompt(`Berapa banyak ${item.NamaBarang} anda mahu beli?\n(${item.Saiz} - RM ${item.Harga})\n\nSila masukkan nombor (Contoh: 1, 2, 3):`, "1");
+                
+                if (kuantiti !== null && parseInt(kuantiti) > 0) {
+                    tambahKeBakul(item, parseInt(kuantiti));
+                }
+            }
         }
 
         function tutupProfilModal() { document.getElementById("profilModal").classList.add("hidden"); itemTertangguh = null; }
@@ -338,10 +358,25 @@
         }
 
         function tambahKeBakul(item, kuantiti) {
-            const jumlah = parseFloat(item.Harga) * kuantiti, sediaAda = bakul.findIndex(b => b.nama === item.NamaBarang && b.saiz === item.Saiz);
-            if (sediaAda > -1) { bakul[sediaAda].kuantiti += kuantiti; bakul[sediaAda].jumlah += jumlah; } 
-            else { bakul.push({ nama: item.NamaBarang, saiz: item.Saiz, hargaSatu: item.Harga, kuantiti: kuantiti, jumlah: jumlah }); }
-            document.getElementById("badgeBakul").innerText = bakul.reduce((t, i) => t + i.kuantiti, 0); Swal.fire({icon: 'success', title: 'Dimasukkan!', timer: 1000, showConfirmButton: false});
+            const jumlah = parseFloat(item.Harga) * kuantiti;
+            const sediaAda = bakul.findIndex(b => b.nama === item.NamaBarang && b.saiz === item.Saiz);
+            
+            if (sediaAda > -1) { 
+                bakul[sediaAda].kuantiti += kuantiti; 
+                bakul[sediaAda].jumlah += jumlah; 
+            } else { 
+                bakul.push({ nama: item.NamaBarang, saiz: item.Saiz, hargaSatu: item.Harga, kuantiti: kuantiti, jumlah: jumlah }); 
+            }
+            
+            document.getElementById("badgeBakul").innerText = bakul.reduce((total, item) => total + item.kuantiti, 0);
+            
+            // Semak jika skrip SweetAlert berjaya dimuatkan
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({icon: 'success', title: 'Dimasukkan!', timer: 1000, showConfirmButton: false});
+            } else {
+                // PELAN B: Guna alert biasa
+                alert(`${kuantiti}x ${item.NamaBarang} telah dimasukkan ke dalam bakul.`);
+            }
         }
 
         function bukaBakul() {
